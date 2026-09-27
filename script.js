@@ -62,64 +62,55 @@ function shuffleArray(array) {
   return arr;
 }
 
-
 // ============================================================
-// PAGE NAVIGATION
+// PAGE NAVIGATION (FIXED BACK BUTTON)
 // ============================================================
 
-function showPage(pageId) {
+// مصفوفة لتتبع سجل الصفحات التي زارها المستخدم
+let pageHistory = [];
+
+function showPage(pageId, isBack = false) {
+  const currentPage = document.querySelector(".view-page.active");
+
+  // إذا لم تكن عملية رجوع، نحفظ الصفحة الحالية في السجل قبل الانتقال
+  if (!isBack && currentPage && currentPage.id !== pageId) {
+    pageHistory.push(currentPage.id);
+  }
 
   document.querySelectorAll(".view-page").forEach(page => {
-
     page.classList.remove("active");
-
     page.style.display = "none";
-
   });
 
-
   const targetPage = document.getElementById(pageId);
-
   if (targetPage) {
-
     targetPage.classList.add("active");
-
     targetPage.style.display = "block";
-
   }
 
-
-  const backBtn =
-    document.getElementById("backBtn");
-
-
+  const backBtn = document.getElementById("backBtn");
   if (backBtn) {
-
-    backBtn.style.display =
-      (pageId === "pageHome")
-        ? "none"
-        : "block";
-
+    // إخفاء زر الرجوع فقط في الصفحة الرئيسية
+    backBtn.style.display = (pageId === "pageHome") ? "none" : "block";
   }
-
 
   window.scrollTo(0, 0);
 }
 
-
 function goBack() {
-
-  showPage("pageHome");
-
+  if (pageHistory.length > 0) {
+    // العودة إلى الصفحة الأخيرة المسجلة في السجل
+    const previousPage = pageHistory.pop();
+    showPage(previousPage, true);
+  } else {
+    // إذا كان السجل فارغاً، يرجع إلى الصفحة الرئيسية كخيار افتراضي
+    showPage("pageHome", true);
+  }
 }
-
 
 function openCategories() {
-
   showPage("pageCategories");
-
 }
-
 
 // ============================================================
 // CATEGORY FORM
