@@ -1332,8 +1332,8 @@ function performAdminLogin() {
 
 
   if (
-    user === "admin" &&
-    pass === "123456"
+    user === "admin1" &&
+    pass === "70725"
   ) {
 
     sessionStorage.setItem(
