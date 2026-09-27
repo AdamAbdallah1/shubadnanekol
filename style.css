@@ -647,3 +647,102 @@ body {
 .view-page::before, .view-page::after {
     display: none !important;
 }
+/* PWA Add to Home Screen Modal */
+.pwa-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    animation: fadeIn 0.3s ease;
+}
+
+.pwa-modal-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: 28px 28px 0 0;
+    padding: 24px 20px 30px 20px;
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    color: var(--text-color);
+    animation: slideUp 0.3s ease;
+}
+
+.pwa-icon-box {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gradient);
+    border-radius: 20px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+}
+
+.pwa-icon-box svg {
+    width: 30px;
+    height: 30px;
+    fill: #000;
+}
+
+.pwa-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.pwa-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.pwa-btn-install {
+    background: var(--primary-gradient);
+    color: #000000;
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+    transition: opacity 0.2s;
+}
+
+.pwa-btn-install:active {
+    opacity: 0.85;
+}
+
+.pwa-btn-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
