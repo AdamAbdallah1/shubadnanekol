@@ -620,10 +620,10 @@ body {
 /* Floating WhatsApp */
 .floating-whatsapp {
     position: fixed;
-    bottom: 20px;
+    bottom: 30px;
     right: 20px;
     width: 52px;
-    height: 70px;
+    height: 53px;
     background: #25d366;
     border-radius: 50%;
     display: flex;
