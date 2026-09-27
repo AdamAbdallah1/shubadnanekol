@@ -62,41 +62,39 @@ function shuffleArray(array) {
   return arr;
 }
 // ============================================================
-// PAGE NAVIGATION (FIXED BACK & REFRESH PERSISTENCE)
+// PAGE NAVIGATION (LOCALSTORAGE METHOD FOR REFRESH)
 // ============================================================
 
 let pageHistory = [];
 
-function showPage(pageId, isBack = false, updateHash = true) {
+function showPage(pageId, isBack = false) {
   const currentPage = document.querySelector(".view-page.active");
 
-  // حفظ الصفحة الحالية في السجل إذا لم تكن عملية رجوع
+  // حفظ الصفحة الحالية في سجل الرجوع
   if (!isBack && currentPage && currentPage.id !== pageId) {
     pageHistory.push(currentPage.id);
   }
 
-  // إخفاء جميع الصفحات
+  // إخفاء كافة الصفحات
   document.querySelectorAll(".view-page").forEach(page => {
     page.classList.remove("active");
     page.style.display = "none";
   });
 
-  // إظهار الصفحة المطلوبة
+  // إظهار الصفحة المستهدفة
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add("active");
     targetPage.style.display = "block";
+    
+    // حفظ اسم الصفحة الحالية في ذاكرة المتصفح لعدم فقدانها عند الـ Refresh
+    localStorage.setItem("lastActivePage", pageId);
   }
 
-  // إظهار/إخفاء زر الرجوع
+  // التحكم بإظهار زر الرجوع
   const backBtn = document.getElementById("backBtn");
   if (backBtn) {
     backBtn.style.display = (pageId === "pageHome") ? "none" : "block";
-  }
-
-  // تحديث الـ URL (كي تظل في نفس الصفحة عند الـ Refresh)
-  if (updateHash) {
-    window.location.hash = pageId;
   }
 
   window.scrollTo(0, 0);
@@ -115,6 +113,19 @@ function openCategories() {
   showPage("pageCategories");
 }
 
+// ------------------------------------------------------------
+// استرجاع الصفحة عند عمل Refresh
+// ------------------------------------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  // جلب آخر صفحة كانت مفتوحة من الذاكرة
+  const savedPage = localStorage.getItem("lastActivePage");
+
+  if (savedPage && document.getElementById(savedPage)) {
+    showPage(savedPage, true);
+  } else {
+    showPage("pageHome", true);
+  }
+});
 // ------------------------------------------------------------
 // الحفاظ على الصفحة عند عمل Refresh أو فتح رابط مباشر
 // ------------------------------------------------------------
