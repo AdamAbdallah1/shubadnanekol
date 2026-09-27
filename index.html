@@ -9,13 +9,12 @@
         .view-page { display: none; }
         .view-page.active { display: block !important; }
         .region-card-link { display: block; text-decoration: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .footer-link { display: block; width: 100%; height: 100%; color: inherit; text-decoration: none; padding: 15px 0; -webkit-tap-highlight-color: transparent; }
-
-        /* Firebase image upload */
+        
+        /* Firebase image upload previews */
         .image-upload-preview {
             display: none;
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             object-fit: cover;
             border-radius: 12px;
             margin-top: 8px;
@@ -24,21 +23,21 @@
 
         .gallery-upload-preview {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
             margin-top: 8px;
         }
 
         .gallery-upload-preview img {
             width: 100%;
-            height: 80px;
+            height: 75px;
             object-fit: cover;
             border-radius: 8px;
             border: 1px solid #ddd;
         }
 
         .upload-help-text {
-            font-size: 10px;
+            font-size: 11px;
             color: #777;
             margin-top: 4px;
         }
@@ -53,6 +52,7 @@
 <body style="padding-bottom: 60px;">
 
 <div class="app-container">
+    <!-- Header -->
     <header class="app-header">
         <div style="display: flex; align-items: center; gap: 8px;">
             <button class="back-btn" id="backBtn" onclick="window.goBack()" aria-label="Back" style="display: none;">
@@ -68,6 +68,7 @@
         </div>
     </header>
 
+    <!-- Logo Section -->
     <div class="logo-section" id="defaultLogoSection" style="text-align: center;">
         <div class="logo-circle-glow" style="display: inline-block;">
             <div class="logo-circle" style="margin: 0 auto;">
@@ -80,9 +81,9 @@
 
     <!-- PAGE 1: HOME -->
     <div class="view-page active" id="pageHome">
-        <!-- كارت منطقة الضاحية القابل للضغط -->
-        <a href="javascript:void(0);" onclick="window.openCategories && window.openCategories()" class="region-card-link" role="button">
-            <div class="region-card" onclick="window.openCategories && window.openCategories()">
+        <!-- كارت المنطقة القابل للضغط -->
+        <a href="javascript:void(0);" onclick="window.openCategories()" class="region-card-link" role="button">
+            <div class="region-card" onclick="window.openCategories()">
                 <img src="https://lh3.googleusercontent.com/d/1doCOmMqmtbPIMdy4ZnvUx1pIsI3csgjl" alt="Dahyeh Region">
                 <div class="region-overlay">
                     <span class="region-badge">منطقة الضاحية</span>
@@ -92,10 +93,10 @@
             </div>
         </a>
 
-        <!-- الأزرار التفاعلية المميزة -->
+        <!-- أزرار الميزات السريعة -->
         <div class="app-features-strip">
             <div class="feature-pill clickable-pill" onclick="window.open('https://wa.me/96170725668', '_blank')">خدمة عملاء</div>
-            <div class="feature-pill clickable-pill" onclick="window.openCategories && window.openCategories()">خريطة مباشرة</div>
+            <div class="feature-pill clickable-pill" onclick="window.openCategories()">خريطة مباشرة</div>
             <a href="https://wa.me/96170725668" target="_blank" style="text-decoration: none; color: inherit;">
                 <div class="feature-pill clickable-pill">تواصل واتساب</div>
             </a>
@@ -152,12 +153,12 @@
             <h3 style="margin-bottom: 15px; color: #008080; font-size: 16px;">Admin Authentication</h3>
             <form onsubmit="return false;" autocomplete="off">
                 <div class="admin-form-group">
-                    <label>Email Address / Username</label>
-                    <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="off" name="admin_user_field" readonly onfocus="this.removeAttribute('readonly');">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="off" name="admin_user_field">
                 </div>
                 <div class="admin-form-group">
                     <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="new-password" name="admin_pass_field" readonly onfocus="this.removeAttribute('readonly');">
+                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="new-password" name="admin_pass_field">
                 </div>
                 <button class="admin-btn" type="button" onclick="window.performAdminLogin()">Login to Dashboard</button>
             </form>
@@ -167,6 +168,7 @@
     <!-- PAGE 6: ADMIN DASHBOARD -->
     <div class="view-page" id="pageAdmin">
 
+        <!-- CATEGORIES CONTROL -->
         <div class="admin-box glass-panel">
             <h3 id="categoryFormTitle" style="color: #008080; font-size: 15px; margin-bottom: 12px;">Add / Edit Category</h3>
             <input type="hidden" id="editCatDocId">
@@ -188,9 +190,9 @@
 
             <!-- CATEGORY IMAGE UPLOAD -->
             <div class="admin-form-group">
-                <label>Category Image (Upload File)</label>
+                <label>Category Image File</label>
                 <input type="file" id="adminCatFile" accept="image/*">
-                <div class="upload-help-text">اختر صورة القسم من جهازك</div>
+                <div class="upload-help-text">اختر صورة القسم من جهازك (أقل من 5 MB)</div>
                 <img id="catPreview" class="image-upload-preview" alt="Category Preview">
                 <input type="text" id="adminCatImg" placeholder="أو ضع رابط صورة مباشرة" style="margin-top: 8px;">
             </div>
@@ -204,17 +206,13 @@
             <div id="adminManageCategoriesContainer"></div>
         </div>
 
-
+        <!-- RESTAURANTS CONTROL -->
         <div class="admin-box glass-panel">
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h3 id="formTitle" style="color: #008080; font-size: 15px;">Add New Restaurant</h3>
 
-                <button
-                    class="admin-btn admin-btn-logout"
-                    type="button"
-                    style="width: auto; padding: 6px 12px; font-size: 11px; margin-top: 0;"
-                    onclick="window.logoutAdmin()">
+                <button class="admin-btn admin-btn-logout" type="button" style="width: auto; padding: 6px 12px; font-size: 11px; margin-top: 0; background: #e74c3c;" onclick="window.logoutAdmin()">
                     Logout
                 </button>
             </div>
@@ -236,7 +234,7 @@
                 <input type="text" id="adminDesc" placeholder="e.g. Best Burgers in Town">
             </div>
 
-            <!-- RESTAURANT OPEN & CLOSE HOURS -->
+            <!-- OPEN & CLOSE HOURS -->
             <div style="display: flex; gap: 10px;">
                 <div class="admin-form-group" style="flex: 1;">
                     <label>Opening Time (ساعة الفتح)</label>
@@ -248,29 +246,29 @@
                 </div>
             </div>
 
-            <!-- RESTAURANT COVER IMAGE UPLOAD -->
+            <!-- COVER IMAGE UPLOAD -->
             <div class="admin-form-group">
-                <label>Restaurant Cover Background Image (صورة خلفية الكارت)</label>
+                <label>Cover Background Image (صورة خلفية الكارت)</label>
                 <input type="file" id="adminCoverFile" accept="image/*">
-                <div class="upload-help-text">اختر صورة الخلفية الكبيرة للمطعم من جهازك</div>
+                <div class="upload-help-text">اختر صورة الخلفية الكبيرة (أقل من 5 MB)</div>
                 <img id="coverPreview" class="image-upload-preview" alt="Cover Preview">
                 <input type="text" id="adminCover" placeholder="أو ضع رابط صورة الخلفية مباشرة" style="margin-top: 8px;">
             </div>
 
-            <!-- RESTAURANT LOGO UPLOAD -->
+            <!-- LOGO UPLOAD -->
             <div class="admin-form-group">
                 <label>Restaurant Logo (شعار المطعم الدائري)</label>
                 <input type="file" id="adminLogoFile" accept="image/*">
-                <div class="upload-help-text">اختر شعار المطعم من جهازك</div>
+                <div class="upload-help-text">اختر شعار المطعم (أقل من 5 MB)</div>
                 <img id="logoPreview" class="image-upload-preview" alt="Logo Preview">
                 <input type="text" id="adminLogo" placeholder="أو ضع رابط صورة الشعار مباشرة" style="margin-top: 8px;">
             </div>
 
-            <!-- RESTAURANT GALLERY UPLOAD -->
+            <!-- GALLERY UPLOAD -->
             <div class="admin-form-group">
-                <label>Gallery Images (معرض الصور)</label>
+                <label>Gallery Images (معرض الصور - حد أقصى 20)</label>
                 <input type="file" id="adminGalleryFiles" accept="image/*" multiple>
-                <div class="upload-help-text">يمكنك اختيار عدة صور من جهازك</div>
+                <div class="upload-help-text">يمكنك اختيار حتى 20 صورة معاً من جهازك</div>
                 <div id="galleryPreview" class="gallery-upload-preview"></div>
                 <input type="text" id="adminGallery" placeholder="أو ضع روابط الصور مفصولة بفواصل" style="margin-top: 8px;">
             </div>
@@ -313,7 +311,7 @@
 
     <!-- Footer -->
     <footer class="app-footer" style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; font-size: 10px; color: #8b949e; background: #0d1117; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 99999; padding: 4px 0;">
-        <a href="javascript:void(0);" onclick="window.checkAdminAccess && window.checkAdminAccess()" style="color: inherit; text-decoration: none; display: block; font-weight: 300; letter-spacing: 0.5px;">
+        <a href="javascript:void(0);" onclick="window.checkAdminAccess()" style="color: inherit; text-decoration: none; display: block; font-weight: 300; letter-spacing: 0.5px;">
             SHU BADNA NEKOL 2026 © جميع الحقوق محفوظة
         </a>
     </footer>
