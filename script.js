@@ -2797,3 +2797,51 @@ window.openRestaurantProfile =
 
 window.editRestaurant =
   editRestaurant;
+// ============================================================
+// PWA INSTALL MODAL & BUTTON HANDLER
+// ============================================================
+
+let deferredPrompt;
+
+// 1. التقاط حدث التثبيت التلقائي من المتصفح
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+// 2. تفعيل الدالة التي تستدعيها عند الضغط على زر التنزيل في الصفحة الأولى
+window.triggerInstallModal = function() {
+  const modal = document.getElementById('pwaModal');
+  if (modal) {
+    modal.style.display = 'flex';
+  }
+};
+
+// 3. ربط أزرار النافذة المنبثقة (Modal) للعمل بشكل صحيح
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.getElementById('pwaInstallBtn');
+  const closeBtn = document.getElementById('pwaCloseBtn');
+  const modal = document.getElementById('pwaModal');
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        }
+        deferredPrompt = null;
+      } else {
+        alert('ميزة التثبيت غير متاح حالياً أو أن التطبيق مثبت مسبقاً على هاتفك. يمكنك تثبيته يدوياً من إعدادات المتصفح (إضافة إلى الشاشة الرئيسية).');
+      }
+      if (modal) modal.style.display = 'none';
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      if (modal) modal.style.display = 'none';
+    });
+  }
+});
