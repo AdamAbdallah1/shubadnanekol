@@ -2653,6 +2653,49 @@ document.addEventListener(
 
 let deferredPrompt;
 
+// إضافة تنسيق CSS للزر لتجنب ظهوره بحجم عملاق وغير متناسق
+const installBannerStyle = document.createElement('style');
+installBannerStyle.innerHTML = `
+  #install-banner {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e1e1e;
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 9999;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+  }
+  #install-btn {
+    background: #00bcd4;
+    color: #white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+    display: inline-block;
+    width: auto;
+  }
+  #close-banner-btn {
+    background: transparent;
+    color: #aaa;
+    border: none;
+    cursor: pointer;
+    float: left;
+    font-size: 16px;
+  }
+`;
+document.head.appendChild(installBannerStyle);
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredPrompt = e;
