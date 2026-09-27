@@ -2653,7 +2653,7 @@ document.addEventListener(
 
 let deferredPrompt;
 
-// إضافة تنسيق CSS للزر لتجنب ظهوره بحجم عملاق وغير متناسق
+// إضافة تنسيق CSS للزر بشكل صحيح ودون أخطاء
 const installBannerStyle = document.createElement('style');
 installBannerStyle.innerHTML = `
   #install-banner {
@@ -2674,7 +2674,7 @@ installBannerStyle.innerHTML = `
   }
   #install-btn {
     background: #00bcd4;
-    color: #white;
+    color: #ffffff;
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
@@ -2739,7 +2739,6 @@ if (closeBannerBtn) {
     }
   });
 }
-
 
 // ============================================================
 // GLOBAL FUNCTIONS EXPORT
