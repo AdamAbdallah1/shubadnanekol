@@ -1,19 +1,19 @@
 {
   "name": "Shu Badna Nekol - شو بدنا ناكل",
-  "short_name": "شو بدنا ناكل",
+  "short_name": "Shu Badna Nekol",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#00f2fe",
   "icons": [
     {
-      "src": "icon.jpeg",
+      "src": "iconnn.jpeg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "icon.jpeg",
+      "src": "iconnn.jpeg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
