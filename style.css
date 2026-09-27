@@ -400,7 +400,7 @@ body {
 /* لوجو المطعم في منتصف الصورة تماماً */
 .restaurant-logo-badge {
     position: absolute;
-    top: 40%;
+    top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 70px;
