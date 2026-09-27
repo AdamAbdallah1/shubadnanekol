@@ -789,11 +789,11 @@ body {
     background: var(--primary-gradient);
     color: #000;
     border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 15px 15px;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: 700;
-    font-size: 13px;
+    font-weight: 500;
+    font-size: 10px;
     box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
     display: inline-flex;
     align-items: center;
@@ -808,7 +808,7 @@ body {
 }
 
 .pwa-download-btn svg {
-    width: 16px;
-    height: 16px;
+    width: 10px;
+    height: 10px;
     fill: #000;
 }
