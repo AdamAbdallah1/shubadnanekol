@@ -621,9 +621,9 @@ body {
 .floating-whatsapp {
     position: fixed;
     bottom: 20px;
-    left: 20px;
+    right: 20px;
     width: 52px;
-    height: 52px;
+    height: 70px;
     background: #25d366;
     border-radius: 50%;
     display: flex;
