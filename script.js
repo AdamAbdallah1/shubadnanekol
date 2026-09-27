@@ -62,38 +62,34 @@ function shuffleArray(array) {
   return arr;
 }
 // ============================================================
-// PAGE NAVIGATION (LOCALSTORAGE METHOD FOR REFRESH)
+// PAGE NAVIGATION (FIXED BACK BUTTON)
 // ============================================================
 
+// مصفوفة لتتبع سجل الصفحات التي زارها المستخدم
 let pageHistory = [];
 
 function showPage(pageId, isBack = false) {
   const currentPage = document.querySelector(".view-page.active");
 
-  // حفظ الصفحة الحالية في سجل الرجوع
+  // إذا لم تكن عملية رجوع، نحفظ الصفحة الحالية في السجل قبل الانتقال
   if (!isBack && currentPage && currentPage.id !== pageId) {
     pageHistory.push(currentPage.id);
   }
 
-  // إخفاء كافة الصفحات
   document.querySelectorAll(".view-page").forEach(page => {
     page.classList.remove("active");
     page.style.display = "none";
   });
 
-  // إظهار الصفحة المستهدفة
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add("active");
     targetPage.style.display = "block";
-    
-    // حفظ اسم الصفحة الحالية في ذاكرة المتصفح لعدم فقدانها عند الـ Refresh
-    localStorage.setItem("lastActivePage", pageId);
   }
 
-  // التحكم بإظهار زر الرجوع
   const backBtn = document.getElementById("backBtn");
   if (backBtn) {
+    // إخفاء زر الرجوع فقط في الصفحة الرئيسية
     backBtn.style.display = (pageId === "pageHome") ? "none" : "block";
   }
 
@@ -102,9 +98,11 @@ function showPage(pageId, isBack = false) {
 
 function goBack() {
   if (pageHistory.length > 0) {
+    // العودة إلى الصفحة الأخيرة المسجلة في السجل
     const previousPage = pageHistory.pop();
     showPage(previousPage, true);
   } else {
+    // إذا كان السجل فارغاً، يرجع إلى الصفحة الرئيسية كخيار افتراضي
     showPage("pageHome", true);
   }
 }
