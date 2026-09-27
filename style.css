@@ -779,3 +779,36 @@ body {
     from { transform: translateY(100%); }
     to { transform: translateY(0); }
 }
+/* زر تنزيل التطبيق - تصميم أنيق وصغير */
+.pwa-download-container {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.pwa-download-btn {
+    background: var(--primary-gradient);
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.pwa-download-btn:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+}
+
+.pwa-download-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: #000;
+}
