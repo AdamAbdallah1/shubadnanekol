@@ -2751,3 +2751,14 @@ window.openRestaurantProfile =
 
 window.editRestaurant =
   editRestaurant;
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('install') === 'true') {
+        // تأخير بسيط ثانية لضمان تحميل الصفحة، بعدين بتفتح نافذة التنزيل
+        setTimeout(() => {
+            if (window.triggerInstallModal) {
+                window.triggerInstallModal();
+            }
+        }, 800);
+    }
+});
