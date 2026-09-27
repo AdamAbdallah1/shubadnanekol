@@ -62,35 +62,41 @@ function shuffleArray(array) {
   return arr;
 }
 // ============================================================
-// PAGE NAVIGATION (FIXED BACK BUTTON)
+// PAGE NAVIGATION (FIXED BACK & REFRESH PERSISTENCE)
 // ============================================================
 
-// مصفوفة لتتبع سجل الصفحات التي زارها المستخدم
 let pageHistory = [];
 
-function showPage(pageId, isBack = false) {
+function showPage(pageId, isBack = false, updateHash = true) {
   const currentPage = document.querySelector(".view-page.active");
 
-  // إذا لم تكن عملية رجوع، نحفظ الصفحة الحالية في السجل قبل الانتقال
+  // حفظ الصفحة الحالية في السجل إذا لم تكن عملية رجوع
   if (!isBack && currentPage && currentPage.id !== pageId) {
     pageHistory.push(currentPage.id);
   }
 
+  // إخفاء جميع الصفحات
   document.querySelectorAll(".view-page").forEach(page => {
     page.classList.remove("active");
     page.style.display = "none";
   });
 
+  // إظهار الصفحة المطلوبة
   const targetPage = document.getElementById(pageId);
   if (targetPage) {
     targetPage.classList.add("active");
     targetPage.style.display = "block";
   }
 
+  // إظهار/إخفاء زر الرجوع
   const backBtn = document.getElementById("backBtn");
   if (backBtn) {
-    // إخفاء زر الرجوع فقط في الصفحة الرئيسية
     backBtn.style.display = (pageId === "pageHome") ? "none" : "block";
+  }
+
+  // تحديث الـ URL (كي تظل في نفس الصفحة عند الـ Refresh)
+  if (updateHash) {
+    window.location.hash = pageId;
   }
 
   window.scrollTo(0, 0);
@@ -98,14 +104,46 @@ function showPage(pageId, isBack = false) {
 
 function goBack() {
   if (pageHistory.length > 0) {
-    // العودة إلى الصفحة الأخيرة المسجلة في السجل
     const previousPage = pageHistory.pop();
     showPage(previousPage, true);
   } else {
-    // إذا كان السجل فارغاً، يرجع إلى الصفحة الرئيسية كخيار افتراضي
     showPage("pageHome", true);
   }
 }
+
+function openCategories() {
+  showPage("pageCategories");
+}
+
+// ------------------------------------------------------------
+// الحفاظ على الصفحة عند عمل Refresh أو فتح رابط مباشر
+// ------------------------------------------------------------
+function loadPageFromHash() {
+  // قراءة اسم الصفحة من الـ Hash (مثل #pageCategories)
+  const hash = window.location.hash.replace("#", "");
+  
+  if (hash && document.getElementById(hash)) {
+    // فتح الصفحة الموجودة في الـ Hash بدون إضافة سجل مضاعف
+    showPage(hash, false, false);
+  } else {
+    // الصفحة الافتراضية عند عدم وجود Hash
+    showPage("pageHome", false, false);
+  }
+}
+
+// تشغيل الفحص عند تحميل الصفحة أو عمل Refresh
+window.addEventListener("DOMContentLoaded", loadPageFromHash);
+
+// التعامل مع أزرار الرجوع/التقدم الخاصة بالمتصفح نفسه
+window.addEventListener("hashchange", () => {
+  const hash = window.location.hash.replace("#", "");
+  if (hash && document.getElementById(hash)) {
+    const currentPage = document.querySelector(".view-page.active");
+    if (!currentPage || currentPage.id !== hash) {
+      showPage(hash, true, false);
+    }
+  }
+});
 
 function openCategories() {
   showPage("pageCategories");
