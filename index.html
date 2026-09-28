@@ -95,6 +95,7 @@
 
     <!-- PAGE 1: HOME -->
     <div class="view-page active" id="pageHome">
+        <!-- كارت منطقة الضاحية القابل للضغط -->
         <a href="javascript:void(0);" onclick="window.openCategories && window.openCategories()" class="region-card-link" role="button">
             <div class="region-card">
                 <img src="https://lh3.googleusercontent.com/d/1doCOmMqmtbPIMdy4ZnvUx1pIsI3csgjl" alt="Dahyeh Region">
@@ -106,6 +107,7 @@
             </div>
         </a>
 
+        <!-- الأزرار التفاعلية المميزة -->
         <div class="app-features-strip">
             <div class="feature-pill clickable-pill" onclick="window.open('https://wa.me/96170725668', '_blank')">خدمة عملاء</div>
             <div class="feature-pill clickable-pill" onclick="window.openCategories && window.openCategories()">خريطة مباشرة</div>
@@ -118,6 +120,7 @@
          الحياة صار إلها طعمة
         </div>
 
+        <!-- زر تنزيل الويبسايت كبرنامج أسفل عبارة حياتك بتكمل بوجودنا مباشرة -->
         <div class="pwa-download-container">
             <button onclick="window.triggerInstallModal && window.triggerInstallModal()" class="pwa-download-btn">
                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -186,6 +189,7 @@
 
     <!-- PAGE 6: ADMIN DASHBOARD -->
     <div class="view-page" id="pageAdmin">
+
         <div class="admin-box glass-panel">
             <h3 id="categoryFormTitle" style="color: #008080; font-size: 15px; margin-bottom: 12px;">Add / Edit Category</h3>
             <input type="hidden" id="editCatDocId">
@@ -205,6 +209,7 @@
                 <input type="number" id="adminCatOrder" placeholder="1, 2, 3...">
             </div>
 
+            <!-- CATEGORY IMAGE UPLOAD -->
             <div class="admin-form-group">
                 <label>Category Image (Upload File)</label>
                 <input type="file" id="adminCatFile" accept="image/*">
@@ -222,10 +227,19 @@
             <div id="adminManageCategoriesContainer"></div>
         </div>
 
+
         <div class="admin-box glass-panel">
+
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h3 id="formTitle" style="color: #008080; font-size: 15px;">Add New Restaurant</h3>
-                <button class="admin-btn admin-btn-logout" type="button" style="width: auto; padding: 6px 12px; font-size: 11px; margin-top: 0;" onclick="window.logoutAdmin()">Logout</button>
+
+                <button
+                    class="admin-btn admin-btn-logout"
+                    type="button"
+                    style="width: auto; padding: 6px 12px; font-size: 11px; margin-top: 0;"
+                    onclick="window.logoutAdmin()">
+                    Logout
+                </button>
             </div>
 
             <input type="hidden" id="editDocId">
@@ -245,6 +259,7 @@
                 <input type="text" id="adminDesc" placeholder="e.g. Best Burgers in Town">
             </div>
 
+            <!-- RESTAURANT OPEN & CLOSE HOURS -->
             <div style="display: flex; gap: 10px;">
                 <div class="admin-form-group" style="flex: 1;">
                     <label>Opening Time (ساعة الفتح)</label>
@@ -256,6 +271,7 @@
                 </div>
             </div>
 
+            <!-- RESTAURANT COVER IMAGE UPLOAD -->
             <div class="admin-form-group">
                 <label>Restaurant Cover Background Image (صورة خلفية الكارت)</label>
                 <input type="file" id="adminCoverFile" accept="image/*">
@@ -264,6 +280,7 @@
                 <input type="text" id="adminCover" placeholder="أو ضع رابط صورة الخلفية مباشرة" style="margin-top: 8px;">
             </div>
 
+            <!-- RESTAURANT LOGO UPLOAD -->
             <div class="admin-form-group">
                 <label>Restaurant Logo (شعار المطعم الدائري)</label>
                 <input type="file" id="adminLogoFile" accept="image/*">
@@ -272,6 +289,7 @@
                 <input type="text" id="adminLogo" placeholder="أو ضع رابط صورة الشعار مباشرة" style="margin-top: 8px;">
             </div>
 
+            <!-- RESTAURANT GALLERY UPLOAD -->
             <div class="admin-form-group">
                 <label>Gallery Images (معرض الصور)</label>
                 <input type="file" id="adminGalleryFiles" accept="image/*" multiple>
@@ -299,12 +317,14 @@
                 <button class="admin-btn" type="button" onclick="window.saveRestaurantToFirebase()">Save Restaurant</button>
                 <button class="admin-btn" type="button" style="background: #777;" onclick="window.resetAdminForm()">Reset</button>
             </div>
+
         </div>
 
         <div class="admin-box glass-panel">
             <h4 style="color: #008080; font-size: 13px; margin-bottom: 10px;">Active Firebase Restaurants</h4>
             <div id="adminManageListContainer"></div>
         </div>
+
     </div>
 
     <!-- Floating WhatsApp -->
@@ -320,20 +340,21 @@
             SHU BADNA NEKOL 2026 © جميع الحقوق محفوظة
         </a>
     </footer>
+
 </div>
 
 <script type="module" src="script.js"></script>
 
-<!-- نافذة إضافة التطبيق للشاشة الرئيسية المحدثة للآيفون والأندرويد -->
-<div id="pwaModal" class="pwa-modal-overlay" style="display: none;">
-    <div class="pwa-modal-card">
-        <div class="pwa-icon-box">
-            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+<!-- نافذة إضافة التطبيق للشاشة الرئيسية (تدعم الأندرويد والآيفون بذكاء) -->
+<div id="pwaModal" class="pwa-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 999999; backdrop-filter: blur(8px); justify-content: center; align-items: flex-end;">
+    <div class="pwa-modal-card" style="background: #161b22; border: 1px solid rgba(0,242,254,0.3); padding: 24px 20px 30px 20px; border-radius: 28px 28px 0 0; width: 100%; max-width: 480px; text-align: center; color: #fff; box-shadow: 0 -10px 30px rgba(0,0,0,0.5);">
+        <div class="pwa-icon-box" style="width: 60px; height: 60px; background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+            <svg viewBox="0 0 24 24" style="width: 30px; height: 30px; fill: #000;"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         </div>
-        <h3 class="pwa-title" id="pwaModalTitle">تثبيت تطبيق شو بدنا ناكل</h3>
-        <p class="pwa-desc" id="pwaModalDesc">أضف التطبيق إلى الشاشة الرئيسية لهاتفك لتصل إليه بسرعة وسهولة في أي وقت كالتطبيقات العادية!</p>
-        <button id="pwaInstallBtn" class="pwa-btn-install">إضافة إلى الشاشة الرئيسية</button>
-        <button id="pwaCloseBtn" class="pwa-btn-close">لاحقاً، شكراً</button>
+        <h3 class="pwa-title" style="margin-bottom: 8px; font-size: 18px; font-weight: 800;">إضافة تطبيق شو بدنا ناكل</h3>
+        <p class="pwa-desc" id="pwaModalDesc" style="font-size: 13px; color: #8b949e; line-height: 1.6; margin-bottom: 20px;">أضف التطبيق إلى الشاشة الرئيسية لتصل إليه بسهولة وسرعة كالتطبيقات الحقيقية!</p>
+        <button id="pwaInstallBtn" class="pwa-btn-install" style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); color: #000; border: none; padding: 14px; border-radius: 14px; font-weight: 800; width: 100%; cursor: pointer; margin-bottom: 10px;">إضافة إلى الشاشة الرئيسية</button>
+        <button id="pwaCloseBtn" class="pwa-btn-close" style="background: transparent; color: #8b949e; border: none; padding: 6px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%;">لاحقاً، شكراً</button>
     </div>
 </div>
 </body>
