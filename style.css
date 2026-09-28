@@ -1,485 +1,608 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <!-- إعدادات خاصة لأجهزة آيفون (Apple iOS) -->
-    <link rel="apple-touch-icon" href="iconnn.jpeg">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="شو بدنا ناكل">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shu Badna Nekol - شو بدنا ناكل</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        .view-page { display: none; }
-        .view-page.active { display: block !important; }
-        .region-card-link { display: block; text-decoration: none; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .footer-link { display: block; width: 100%; height: 100%; color: inherit; text-decoration: none; padding: 15px 0; -webkit-tap-highlight-color: transparent; }
+:root {
+    --primary-color: #00f2fe;
+    --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+    --bg-color: #0d1117;
+    --card-bg: rgba(22, 27, 34, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --text-color: #f0f6fc;
+    --text-muted: #8b949e;
+    --border-radius: 20px;
+}
 
-        /* Firebase image upload */
-        .image-upload-preview {
-            display: none;
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-top: 8px;
-            border: 2px solid #008080;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-        .gallery-upload-preview {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            margin-top: 8px;
-        }
+body {
+    background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.08) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(79, 172, 254, 0.08) 0%, transparent 20%);
+    color: var(--text-color);
+    direction: rtl;
+    padding: 10px;
+    min-height: 100vh;
+}
 
-        .gallery-upload-preview img {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-        }
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: transparent;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 70px;
+}
 
-        .upload-help-text {
-            font-size: 10px;
-            color: #777;
-            margin-top: 4px;
-        }
+.glass-panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
 
-        .clickable-pill {
-            cursor: pointer;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+}
 
-        /* تنسيقات نافذة شرح الآيفون المحدثة (صور أكبر وبدون كادر) */
-        .ios-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 999999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-            padding: 10px;
-        }
-        .ios-modal-content {
-            background: #161b22;
-            border: 1px solid rgba(0, 242, 254, 0.3);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 440px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 15px;
-            position: relative;
-            color: #fff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .ios-close-btn {
-            position: absolute;
-            top: 12px;
-            left: 15px;
-            background: none;
-            border: none;
-            color: #8b949e;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        .ios-modal-content h3 {
-            text-align: center;
-            font-size: 15px;
-            margin-bottom: 12px;
-            color: #00f2fe;
-        }
-        .ios-steps-scroll {
-            overflow-y: auto;
-            flex: 1;
-            padding: 0 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .ios-step-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 8px 0;
-            text-align: center;
-        }
-        .ios-step-card p {
-            font-size: 13px;
-            color: #f0f6fc;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-        .ios-step-card img {
-            width: 100%;
-            max-height: 320px; /* تم تكبير الحجم الأقصى للصورة */
-            object-fit: contain;
-            border-radius: 10px;
-            border: none; /* إزالة الكادر تماماً */
-            box-shadow: none; /* إزالة أي ظل للكادر */
-            background: transparent;
-        }
-        .ios-done-btn {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: #000;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-weight: 800;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-    </style>
-    <link rel="manifest" href="manifest.json">
-   <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .then((reg) => console.log('SW registered! Scope:', reg.scope))
-        .catch((err) => console.log('SW registration failed:', err));
-    });
-  }
+.header-title {
+    font-size: 17px;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-  // دوال فتح وإغلاق نافذة الآيفون لتعمل بشكل سليم
-  function openIosGuide() {
-      const modal = document.getElementById('iosGuideModal');
-      if (modal) modal.style.display = 'flex';
-  }
-  function closeIosGuide() {
-      const modal = document.getElementById('iosGuideModal');
-      if (modal) modal.style.display = 'none';
-  }
-</script>
-</head>
-<body style="padding-bottom: 80px;">
+.back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
 
-<div class="app-container">
-    <header class="app-header">
-        <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="back-btn" id="backBtn" onclick="window.goBack()" aria-label="Back" style="display: none;">
-                <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.5;">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-            </button>
-            <div class="header-title" id="headerTitleText">شو بدنا ناكل</div>
-        </div>
-        <div class="header-badge">
-            <div class="pulse-dot"></div>
-            <span>مباشر</span>
-        </div>
-    </header>
+.header-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 242, 254, 0.12);
+    border: 1px solid rgba(0, 242, 254, 0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    color: #00f2fe;
+    font-weight: 600;
+}
 
-    <div class="logo-section" id="defaultLogoSection" style="text-align: center;">
-        <div class="logo-circle-glow" style="display: inline-block;">
-            <div class="logo-circle" style="margin: 0 auto;">
-                <img src="iconnn.jpeg" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/150'">
-            </div>
-        </div>
-        <h1 class="brand-text" style="text-align: center; margin-top: 6px;">SHU BADNA <span style="color: #008080;">NEKOL</span></h1>
-        <p class="brand-slogan" style="text-align: center; margin-top: 2px;">دليلك الأول للمطاعم التي تستحق التجربة</p>
-    </div>
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #00f2fe;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
 
-    <!-- PAGE 1: HOME -->
-    <div class="view-page active" id="pageHome">
-        <!-- كارت منطقة الضاحية القابل للضغط -->
-        <a href="javascript:void(0);" onclick="window.openCategories && window.openCategories()" class="region-card-link" role="button">
-            <div class="region-card">
-                <img src="https://lh3.googleusercontent.com/d/1doCOmMqmtbPIMdy4ZnvUx1pIsI3csgjl" alt="Dahyeh Region">
-                <div class="region-overlay">
-                    <span class="region-badge">منطقة الضاحية</span>
-                    <h2 class="region-title">EL DAHYE</h2>
-                    <p style="text-align: center;">اضغط لتشوف شو عبالك تاكل</p>
-                </div>
-            </div>
-        </a>
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(0, 242, 254, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
+}
 
-        <!-- الأزرار التفاعلية المميزة -->
-        <div class="app-features-strip">
-            <div class="feature-pill clickable-pill" onclick="window.open('https://wa.me/96170725668', '_blank')">خدمة عملاء</div>
-            <div class="feature-pill clickable-pill" onclick="window.openCategories && window.openCategories()">خريطة مباشرة</div>
-            <a href="https://wa.me/96170725668" target="_blank" style="text-decoration: none; color: inherit;">
-                <div class="feature-pill clickable-pill">تواصل واتساب</div>
-            </a>
-        </div>
-        <br>
-        <div class="feature-pill" style="text-align: center; font-weight: 800; color: #008080;">
-         الحياة صار إلها طعمة
-        </div>
+.logo-section {
+    padding: 15px 0 25px 0;
+}
 
-        <!-- زر تنزيل الويبسايت كبرنامج أسفل عبارة حياتك بتكمل بوجودنا مباشرة -->
-        <div class="pwa-download-container">
-            <button onclick="window.triggerInstallModal && window.triggerInstallModal()" class="pwa-download-btn">
-                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                تنزيل التطبيق على اندرويد
-            </button>
-        </div>
-<br>
-      <div class="pwa-download-container">
-    <button onclick="openIosGuide()" class="pwa-download-btn">
-        <svg viewBox="0 0 24 24" width="20" height="20" style="margin-left: 8px;"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-        طريقة التثبيت على أيفون (شرح بالصور) 🍏
-    </button>
-</div>
+.logo-circle-glow {
+    padding: 3px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    box-shadow: 0 0 25px rgba(0, 242, 254, 0.35);
+}
 
-<!-- Modal الخاص بشرح الآيفون المحدث -->
-<div id="iosGuideModal" class="ios-modal-overlay" style="display: none;">
-    <div class="ios-modal-content">
-        <button class="ios-close-btn" onclick="closeIosGuide()">&times;</button>
-        <h3>طريقة إضافة التطبيق إلى الشاشة الرئيسية</h3>
-        
-        <!-- حاوية الخطوات بشكل عمودي مع إمكانية التمرير (Scroll) -->
-        <div class="ios-steps-scroll">
-            <div class="ios-step-card">
-                <p>1. افتح الموقع من متصفح Safari</p>
-                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/9e460dbd-cee2-4bb4-80ba-506e306bfb9c.jpg?raw=true" alt="الخطوة 1" onerror="this.src='https://via.placeholder.com/350x250?text=Step+1'">
-            </div>
-            <div class="ios-step-card">
-                <p>2. اضغط على الثلاث نقاط أو زر المشاركة</p>
-                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/11.jpeg?raw=true" alt="الخطوة 2" onerror="this.src='https://via.placeholder.com/350x250?text=Step+2'">
-            </div>
-            <div class="ios-step-card">
-                <p>3. اختر خيار المشاركة أو الإضافة</p>
-                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/22.jpeg?raw=true" alt="الخطوة 3" onerror="this.src='https://via.placeholder.com/350x250?text=Step+3'">
-            </div>
-            <div class="ios-step-card">
-                <p>4. قم بتسمية الاختصار كما ترغب</p>
-                <img src="https://via.placeholder.com/350x250?text=Step+4" alt="الخطوة 4">
-            </div>
-            <div class="ios-step-card">
-                <p>5. اضغط على "إضافة" لتظهر الأيقونة لديك</p>
-                <img src="https://via.placeholder.com/350x250?text=Step+5" alt="الخطوة 5">
-            </div>
-        </div>
-        
-        <button class="ios-done-btn" onclick="closeIosGuide()">فهمت، شكراً!</button>
-    </div>
-</div>
-    </div>
+.logo-circle {
+    width: 85px;
+    height: 85px;
+    background: #0d1117;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
 
-    <!-- PAGE 2: CATEGORIES -->
-    <div class="view-page" id="pageCategories">
-        <div class="search-box">
-            <input type="text" id="categoriesSearchInput" class="search-input" placeholder="ابحث عن قسم معين..." oninput="window.filterCategories()">
-            <div class="search-icon"><svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
-        </div>
-        <div class="section-header-box"><div class="section-question">شو عبالك اليوم؟</div></div>
-        <div class="categories-grid" id="categoriesGridContainer"></div>
-    </div>
+.logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    <!-- PAGE 3: RESTAURANTS -->
-    <div class="view-page" id="pageRestaurants">
-        <div class="category-hero">
-            <img id="categoryHeroImg" src="" alt="Category Banner">
-            <div class="category-hero-overlay"></div>
-            <div class="category-hero-title" id="categoryHeroTitle">المطاعم</div>
-        </div>
-        <div class="search-box">
-            <input type="text" id="restaurantsSearchInput" class="search-input" placeholder="ابحث عن مطعم محدد..." oninput="window.filterRestaurants()">
-            <div class="search-icon"><svg viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
-        </div>
-        <div class="restaurants-grid" id="restaurantsListContainer"></div>
-    </div>
+.brand-text {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 10px;
+}
 
-    <!-- PAGE 4: PROFILE -->
-    <div class="view-page" id="pageRestProfile">
-        <div class="profile-hero">
-            <img id="profileLogo" src="" alt="Restaurant Logo">
-            <h2 id="profileName">اسم المطعم</h2>
-            <p id="profileDesc">وصف المطعم</p>
-        </div>
-        <div class="section-header-box"><div class="section-question">معرض الصور • Gallery</div></div>
-        <div class="gallery-grid" id="profileGalleryContainer"></div>
-        <div class="profile-actions-bottom">
-            <a id="profileMenuBtn" href="#" target="_blank" class="action-btn btn-menu">MENU</a>
-            <a id="profileContactBtn" href="#" target="_blank" class="action-btn btn-contact">CONTACT</a>
-            <a id="profileLocationBtn" href="#" target="_blank" class="action-btn btn-location">LOCATION</a>
-        </div>
-    </div>
+.brand-slogan {
+    font-size: 13px;
+    color: var(--text-muted);
+}
 
-    <!-- PAGE 5: LOGIN -->
-    <div class="view-page" id="pageLogin">
-        <div class="admin-box glass-panel">
-            <h3 style="margin-bottom: 15px; color: #008080; font-size: 16px;">Admin Authentication</h3>
-            <form onsubmit="return false;" autocomplete="off">
-                <div class="admin-form-group">
-                    <label>Email Address / Username</label>
-                    <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="off" name="admin_user_field" readonly onfocus="this.removeAttribute('readonly');">
-                </div>
-                <div class="admin-form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="new-password" name="admin_pass_field" readonly onfocus="this.removeAttribute('readonly');">
-                </div>
-                <button class="admin-btn" type="button" onclick="window.performAdminLogin()">Login to Dashboard</button>
-            </form>
-        </div>
-    </div>
+.region-card {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    height: 190px;
+    margin-bottom: 20px;
+    border: 1px solid var(--glass-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-    <!-- PAGE 6: ADMIN DASHBOARD -->
-    <div class="view-page" id="pageAdmin">
+.region-card:active {
+    transform: scale(0.98);
+}
 
-        <div class="admin-box glass-panel">
-            <h3 id="categoryFormTitle" style="color: #008080; font-size: 15px; margin-bottom: 12px;">Add / Edit Category</h3>
-            <input type="hidden" id="editCatDocId">
+.region-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-            <div class="admin-form-group">
-                <label>Category Name (Arabic)</label>
-                <input type="text" id="adminCatAr" placeholder="مثال: سناك ومأكولات سريعة">
-            </div>
+.region-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(13, 17, 23, 0.95) 0%, rgba(13, 17, 23, 0.4) 60%, transparent 100%);
+    padding: 20px 16px;
+    color: white;
+}
 
-            <div class="admin-form-group">
-                <label>Category Name (English)</label>
-                <input type="text" id="adminCatEn" placeholder="e.g. Snack & Fast Food">
-            </div>
+.region-badge {
+    background: var(--primary-gradient);
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #000000;
+}
 
-            <div class="admin-form-group">
-                <label>Category Order (الترتيب الرقمي)</label>
-                <input type="number" id="adminCatOrder" placeholder="1, 2, 3...">
-            </div>
+.region-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 6px 0 2px 0;
+    letter-spacing: 0.5px;
+}
 
-            <!-- CATEGORY IMAGE UPLOAD -->
-            <div class="admin-form-group">
-                <label>Category Image (Upload File)</label>
-                <input type="file" id="adminCatFile" accept="image/*">
-                <div class="upload-help-text">اختر صورة القسم من جهازك</div>
-                <img id="catPreview" class="image-upload-preview" alt="Category Preview">
-                <input type="text" id="adminCatImg" placeholder="أو ضع رابط صورة مباشرة" style="margin-top: 8px;">
-            </div>
+.app-features-strip {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+}
 
-            <div style="display: flex; gap: 8px;">
-                <button class="admin-btn" type="button" onclick="window.saveCategoryToFirebase()">Save Category</button>
-                <button class="admin-btn" type="button" style="background: #777;" onclick="window.resetCategoryForm()">Reset</button>
-            </div>
+.feature-pill {
+    background: rgba(22, 27, 34, 0.8);
+    border: 1px solid var(--glass-border);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-color);
+}
 
-            <h4 style="color: #008080; font-size: 13px; margin-top: 15px; margin-bottom: 10px;">Active Categories List</h4>
-            <div id="adminManageCategoriesContainer"></div>
-        </div>
+.search-box {
+    position: relative;
+    margin-bottom: 24px;
+}
 
+.search-input {
+    width: 100%;
+    padding: 16px 20px 16px 48px;
+    border-radius: 30px;
+    border: 1px solid var(--glass-border);
+    background: var(--card-bg);
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
 
-        <div class="admin-box glass-panel">
+.search-input::placeholder {
+    color: var(--text-muted);
+}
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 id="formTitle" style="color: #008080; font-size: 15px;">Add New Restaurant</h3>
+.search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+}
 
-                <button
-                    class="admin-btn admin-btn-logout"
-                    type="button"
-                    style="width: auto; padding: 6px 12px; font-size: 11px; margin-top: 0;"
-                    onclick="window.logoutAdmin()">
-                    Logout
-                </button>
-            </div>
+.search-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    fill: var(--text-muted);
+}
 
-            <input type="hidden" id="editDocId">
+.section-header-box {
+    margin-bottom: 18px;
+}
 
-            <div class="admin-form-group">
-                <label>Category</label>
-                <select id="adminCategory"></select>
-            </div>
+.section-question {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+}
 
-            <div class="admin-form-group">
-                <label>Restaurant Name</label>
-                <input type="text" id="adminName" placeholder="e.g. Gorella Food Truck">
-            </div>
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
 
-            <div class="admin-form-group">
-                <label>Description / Tagline</label>
-                <input type="text" id="adminDesc" placeholder="e.g. Best Burgers in Town">
-            </div>
+.category-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-            <!-- RESTAURANT OPEN & CLOSE HOURS -->
-            <div style="display: flex; gap: 10px;">
-                <div class="admin-form-group" style="flex: 1;">
-                    <label>Opening Time (ساعة الفتح)</label>
-                    <input type="time" id="adminOpenTime" value="11:00">
-                </div>
-                <div class="admin-form-group" style="flex: 1;">
-                    <label>Closing Time (ساعة الإغلاق)</label>
-                    <input type="time" id="adminCloseTime" value="02:00">
-                </div>
-            </div>
+.category-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 18px;
+}
 
-            <!-- RESTAURANT COVER IMAGE UPLOAD -->
-            <div class="admin-form-group">
-                <label>Restaurant Cover Background Image (صورة خلفية الكارت)</label>
-                <input type="file" id="adminCoverFile" accept="image/*">
-                <div class="upload-help-text">اختر صورة الخلفية الكبيرة للمطعم من جهازك</div>
-                <img id="coverPreview" class="image-upload-preview" alt="Cover Preview">
-                <input type="text" id="adminCover" placeholder="أو ضع رابط صورة الخلفية مباشرة" style="margin-top: 8px;">
-            </div>
+.category-title {
+    padding-top: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    text-align: center;
+    width: 100%;
+}
 
-            <!-- RESTAURANT LOGO UPLOAD -->
-            <div class="admin-form-group">
-                <label>Restaurant Logo (شعار المطعم الدائري)</label>
-                <input type="file" id="adminLogoFile" accept="image/*">
-                <div class="upload-help-text">اختر شعار المطعم من جهازك</div>
-                <img id="logoPreview" class="image-upload-preview" alt="Logo Preview">
-                <input type="text" id="adminLogo" placeholder="أو ضع رابط صورة الشعار مباشرة" style="margin-top: 8px;">
-            </div>
+.category-hero {
+    position: relative;
+    height: 140px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1px solid var(--glass-border);
+}
 
-            <!-- RESTAURANT GALLERY UPLOAD -->
-            <div class="admin-form-group">
-                <label>Gallery Images (معرض الصور)</label>
-                <input type="file" id="adminGalleryFiles" accept="image/*" multiple>
-                <div class="upload-help-text">يمكنك اختيار عدة صور من جهازك</div>
-                <div id="galleryPreview" class="gallery-upload-preview"></div>
-                <input type="text" id="adminGallery" placeholder="أو ضع روابط الصور مفصولة بفواصل" style="margin-top: 8px;">
-            </div>
+.category-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-            <div class="admin-form-group">
-                <label>WhatsApp Number (without +)</label>
-                <input type="text" id="adminPhone" placeholder="96170725668">
-            </div>
+.category-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13, 17, 23, 0.9) 0%, rgba(13, 17, 23, 0.3) 100%);
+}
 
-            <div class="admin-form-group">
-                <label>Menu Link (PDF or URL)</label>
-                <input type="text" id="adminMenu" placeholder="https://...">
-            </div>
+.category-hero-title {
+    position: absolute;
+    bottom: 14px;
+    right: 18px;
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 800;
+}
 
-            <div class="admin-form-group">
-                <label>Google Maps Location Link</label>
-                <input type="text" id="adminMap" placeholder="https://maps.app.goo.gl/...">
-            </div>
+.restaurants-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
 
-            <div style="display: flex; gap: 8px;">
-                <button class="admin-btn" type="button" onclick="window.saveRestaurantToFirebase()">Save Restaurant</button>
-                <button class="admin-btn" type="button" style="background: #777;" onclick="window.resetAdminForm()">Reset</button>
-            </div>
+.restaurant-card {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
 
-        </div>
+.restaurant-card > .restaurant-bg-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
 
-        <div class="admin-box glass-panel">
-            <h4 style="color: #008080; font-size: 13px; margin-bottom: 10px;">Active Firebase Restaurants</h4>
-            <div id="adminManageListContainer"></div>
-        </div>
+.restaurant-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13, 17, 23, 0.95) 0%, rgba(13, 17, 23, 0.3) 60%, transparent 100%);
+    z-index: 2;
+}
 
-    </div>
+.restaurant-logo-badge {
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+    z-index: 3;
+    background: #0d1117;
+}
 
-    <!-- Floating WhatsApp -->
-    <a href="https://wa.me/96170725668" target="_blank" class="floating-whatsapp" aria-label="Contact WhatsApp">
-        <svg viewBox="0 0 24 24">
-            <path d="M12.031 0C5.39 0 0 5.39 0 12.031c0 2.122.553 4.195 1.607 6.013L0 24l6.147-1.612a11.97 11.97 0 005.884 1.533h.005c6.64 0 12.03-5.39 12.03-12.031C24.066 5.39 18.671 0 12.031 0zm0 22.028h-.004c-1.8 0-3.564-.484-5.112-1.403l-.367-.218-3.799.996 1.014-3.702-.24-.381A9.972 9.972 0 012.036 12.03c0-5.511 4.484-9.995 9.995-9.995 5.511 0 9.995 4.484 9.995 9.995 0 5.511-4.484 9.998-9.995 9.998z"/>
-        </svg>
-    </a>
+.restaurant-closed-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
 
-    <!-- Footer -->
-    <footer class="app-footer" style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; font-size: 10px; color: #8b949e; background: #0d1117; border-top: 1px solid rgba(255, 255, 255, 0.1); z-index: 999; padding: 6px 0;">
-        <a href="javascript:void(0);" onclick="window.checkAdminAccess && window.checkAdminAccess()" style="color: inherit; text-decoration: none; display: block; font-weight: 300; letter-spacing: 0.5px;">
-            SHU BADNA NEKOL 2026 © جميع الحقوق محفوظة
-        </a>
-    </footer>
+.restaurant-closed-badge {
+    background: rgba(22, 27, 34, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 10px 18px;
+    border-radius: 14px;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 190px;
+}
 
-</div>
+.closed-badge-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ff5252;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-<script type="module" src="script.js"></script>
-</body>
-</html>
+.closed-badge-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.restaurant-info {
+    position: relative;
+    z-index: 3;
+    padding: 16px;
+    color: #ffffff;
+}
+
+.restaurant-info h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+}
+
+.restaurant-info p {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.profile-hero {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 24px 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-hero img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+}
+
+.profile-hero h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.profile-hero p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 95px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 1px solid var(--glass-border);
+}
+
+.profile-actions-bottom {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    padding: 12px 0;
+    text-align: center;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    color: white;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+}
+
+.btn-menu { background: rgba(52, 152, 219, 0.25); color: #3498db; border-color: rgba(52, 152, 219, 0.4); }
+.btn-contact { background: rgba(39, 174, 96, 0.25); color: #2ecc71; border-color: rgba(39, 174, 96, 0.4); }
+.btn-location { background: rgba(231, 76, 60, 0.25); color: #e74c3c; border-color: rgba(231, 76, 60, 0.4); }
+
+.admin-box {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-form-group {
+    margin-bottom: 14px;
+}
+
+.admin-form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.admin-form-group input, .admin-form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    background: rgba(13, 17, 23, 0.6);
+    color: #ffffff;
+    font-size: 13px;
+    outline: none;
+}
+
+.admin-btn {
+    background: var(--primary-gradient);
+    color: #000000;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.admin-btn-logout {
+    background: linear-gradient(135deg, #ff5252, #e74c3c) !important;
+    color: #ffffff !important;
+}
+
+.floating-whatsapp {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    width: 52px;
+    height: 53px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.5);
+    z-index: 1000;
+}
+
+.floating-whatsapp svg {
+    width: 30px;
+    height: 30px;
+    fill: white;
+}
+
+.pwa-download-container {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.pwa-download-btn {
+    background: rgba(22, 27, 34, 0.9);
+    border: 1px solid rgba(0, 242, 254, 0.4);
+    color: #00f2fe;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 12px;
+    box-shadow: 0 4px 12px rgba(0, 242, 254, 0.15);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.pwa-download-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: #00f2fe;
+}
