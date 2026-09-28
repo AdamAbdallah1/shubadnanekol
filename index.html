@@ -54,43 +54,43 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* تنسيقات نافذة شرح الآيفون المحدثة */
+        /* تنسيقات نافذة شرح الآيفون المُحدثة (صور أكبر وواضحة بدون كوادور مزعجة) */
         .ios-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 999999;
             display: flex;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(5px);
-            padding: 15px;
+            backdrop-filter: blur(6px);
+            padding: 10px;
         }
         .ios-modal-content {
             background: #161b22;
-            border: 1px solid rgba(0, 242, 254, 0.3);
+            border: 1px solid rgba(0, 242, 254, 0.35);
             border-radius: 24px;
             width: 100%;
-            max-width: 420px;
-            max-height: 85vh;
+            max-width: 440px;
+            max-height: 92vh;
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            padding: 20px 15px;
             position: relative;
             color: #fff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
         }
         .ios-close-btn {
             position: absolute;
-            top: 15px;
+            top: 12px;
             left: 15px;
             background: none;
             border: none;
             color: #8b949e;
-            font-size: 24px;
+            font-size: 26px;
             cursor: pointer;
         }
         .ios-modal-content h3 {
@@ -98,47 +98,47 @@
             font-size: 16px;
             margin-bottom: 15px;
             color: #00f2fe;
+            font-weight: 700;
         }
         .ios-steps-scroll {
             overflow-y: auto;
             flex: 1;
-            padding-left: 5px;
-            padding-right: 5px;
+            padding: 0 5px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 18px;
         }
         .ios-step-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
             border-radius: 14px;
-            padding: 12px;
+            padding: 10px 0;
             text-align: center;
         }
         .ios-step-card p {
             font-size: 13px;
             color: #f0f6fc;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 700;
         }
         .ios-step-card img {
             width: 100%;
-            max-height: 180px;
+            max-height: 350px; /* تم تكبير الارتفاع الأقصى لتظهر الصورة بحجم مريح وواضح */
             object-fit: contain;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: #0d1117;
+            border-radius: 12px;
+            border: none; /* إزالة الحدود */
+            background: transparent;
         }
         .ios-done-btn {
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             color: #000;
             border: none;
-            padding: 12px;
+            padding: 13px;
             border-radius: 12px;
             font-weight: 800;
             width: 100%;
             cursor: pointer;
             margin-top: 15px;
+            font-size: 14px;
         }
     </style>
     <link rel="manifest" href="manifest.json">
@@ -242,23 +242,23 @@
         <div class="ios-steps-scroll">
             <div class="ios-step-card">
                 <p>1. افتح الموقع من متصفح Safari</p>
-                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/9e460dbd-cee2-4bb4-80ba-506e306bfb9c.jpg?raw=true" alt="الخطوة 1" onerror="this.src='https://via.placeholder.com/300x150?text=Step+1'">
+                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/9e460dbd-cee2-4bb4-80ba-506e306bfb9c.jpg?raw=true" alt="الخطوة 1" onerror="this.src='https://via.placeholder.com/350x250?text=Step+1'">
             </div>
             <div class="ios-step-card">
                 <p>2. اضغط على الثلاث نقاط أو زر المشاركة</p>
-                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/11.jpeg?raw=true" alt="الخطوة 2" onerror="this.src='https://via.placeholder.com/300x150?text=Step+2'">
+                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/11.jpeg?raw=true" alt="الخطوة 2" onerror="this.src='https://via.placeholder.com/350x250?text=Step+2'">
             </div>
             <div class="ios-step-card">
                 <p>3. اختر خيار المشاركة أو الإضافة</p>
-                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/22.jpeg?raw=true" alt="الخطوة 3" onerror="this.src='https://via.placeholder.com/300x150?text=Step+3'">
+                <img src="https://github.com/shubadnanotlobb/shubadnanotlob/blob/main/22.jpeg?raw=true" alt="الخطوة 3" onerror="this.src='https://via.placeholder.com/350x250?text=Step+3'">
             </div>
             <div class="ios-step-card">
                 <p>4. قم بتسمية الاختصار كما ترغب</p>
-                <img src="https://via.placeholder.com/300x150?text=Step+4" alt="الخطوة 4">
+                <img src="https://via.placeholder.com/350x250?text=Step+4" alt="الخطوة 4">
             </div>
             <div class="ios-step-card">
                 <p>5. اضغط على "إضافة" لتظهر الأيقونة لديك</p>
-                <img src="https://via.placeholder.com/300x150?text=Step+5" alt="الخطوة 5">
+                <img src="https://via.placeholder.com/350x250?text=Step+5" alt="الخطوة 5">
             </div>
         </div>
         
