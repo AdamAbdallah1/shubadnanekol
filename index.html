@@ -140,9 +140,104 @@
             margin-top: 15px;
             font-size: 14px;
         }
+        /* نافذة تثبيت أندرويد */
+        .pwa-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(6px);
+            padding: 15px;
+        }
+        .pwa-modal-content {
+            background: #161b22;
+            border: 1px solid rgba(0, 242, 254, 0.35);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 380px;
+            padding: 22px 18px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+        .pwa-modal-content h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #00f2fe;
+            font-weight: 800;
+        }
+        .pwa-modal-content p {
+            font-size: 13px;
+            color: #c9d1d9;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+        .pwa-modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .pwa-install-confirm {
+            flex: 1;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .pwa-install-cancel {
+            flex: 1;
+            background: transparent;
+            color: #8b949e;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+        }
     </style>
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00f2fe">
    <script>
+  // Capture Chrome install prompt EARLY (before module scripts load) so button can trigger it
+  window.deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPrompt = e;
+  });
+  window.addEventListener('appinstalled', () => {
+    window.deferredPrompt = null;
+    hidePwaInstallButtons();
+  });
+
+  function isStandaloneMode() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           window.navigator.standalone === true ||
+           new URLSearchParams(window.location.search).get('standalone') === 'true';
+  }
+
+  function hidePwaInstallButtons() {
+    document.querySelectorAll('.pwa-download-container').forEach((el) => {
+      el.style.display = 'none';
+    });
+    const modal = document.getElementById('pwaModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  // Hide install buttons ASAP if opened from installed standalone app
+  if (isStandaloneMode()) {
+    document.addEventListener('DOMContentLoaded', hidePwaInstallButtons, { once: true });
+  }
+
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
@@ -153,6 +248,7 @@
 
   // دوال فتح وإغلاق نافذة الآيفون لتعمل بشكل سليم
   function openIosGuide() {
+      if (isStandaloneMode()) return;
       const modal = document.getElementById('iosGuideModal');
       if (modal) modal.style.display = 'flex';
   }
@@ -218,18 +314,30 @@
         </div>
 
         <!-- زر تنزيل الويبسايت كبرنامج أسفل عبارة حياتك بتكمل بوجودنا مباشرة -->
-        <div class="pwa-download-container">
-            <button onclick="window.triggerInstallModal && window.triggerInstallModal()" class="pwa-download-btn">
+        <div class="pwa-download-container" id="androidInstallContainer">
+            <button onclick="window.triggerInstallModal && window.triggerInstallModal()" class="pwa-download-btn" id="androidInstallBtn">
                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                 تنزيل التطبيق على اندرويد
             </button>
         </div>
 <br>
-      <div class="pwa-download-container">
+      <div class="pwa-download-container" id="iosInstallContainer">
     <button onclick="openIosGuide()" class="pwa-download-btn">
         <svg viewBox="0 0 24 24" width="20" height="20" style="margin-left: 8px;"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         طريقة التثبيت على أيفون (شرح بالصور) 🍏
     </button>
+</div>
+
+<!-- Modal الخاص بتثبيت أندرويد -->
+<div id="pwaModal" class="pwa-modal-overlay">
+    <div class="pwa-modal-content">
+        <h3>تثبيت التطبيق 📲</h3>
+        <p>ثبّت موقعنا كتطبيق مستقل على شاشة هاتفك لفتحه بسرعة وبدون متصفح.</p>
+        <div class="pwa-modal-actions">
+            <button class="pwa-install-confirm" id="pwaInstallBtn">تثبيت الآن</button>
+            <button class="pwa-install-cancel" id="pwaCloseBtn">لاحقاً</button>
+        </div>
+    </div>
 </div>
 
 <!-- Modal الخاص بشرح الآيفون المحدث -->

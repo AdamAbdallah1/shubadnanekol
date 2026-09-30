@@ -2648,47 +2648,107 @@ document.addEventListener(
 
 
 // ============================================================
-// PWA INSTALL MODAL LOGIC (تمت اضافتها لتعمل مع زر الصفحة الأولى)
+// PWA INSTALL MODAL LOGIC (زر أندرويد -> Chrome install prompt)
 // ============================================================
 
-let deferredPrompt = null;
-
+// NOTE: window.deferredPrompt is captured early in index.html <head>.
+// Here we only keep a fallback listener in case module loaded first.
+window.deferredPrompt = window.deferredPrompt || null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
-  deferredPrompt = e;
+  window.deferredPrompt = e;
 });
 
-window.triggerInstallModal = function() {
+function isStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true;
+}
+
+function hidePwaInstallButtons() {
+  document.querySelectorAll('.pwa-download-container').forEach((el) => {
+    el.style.display = 'none';
+  });
   const modal = document.getElementById('pwaModal');
-  if (modal) {
-    modal.style.display = 'flex';
+  if (modal) modal.style.display = 'none';
+}
+
+window.hidePwaInstallButtons = hidePwaInstallButtons;
+
+window.triggerInstallModal = function() {
+  // لا تعرض أي شيء داخل التطبيق المثبت
+  if (isStandaloneMode()) {
+    hidePwaInstallButtons();
+    return;
   }
+  const modal = document.getElementById('pwaModal');
+  // إذا توفر Chrome prompt نعرض نافذة التأكيد أولاً
+  if (window.deferredPrompt && modal) {
+    modal.style.display = 'flex';
+    return;
+  }
+  // إذا توفر prompt بدون modal (حالة نادرة) نفّذه مباشرة
+  if (window.deferredPrompt) {
+    promptAndroidInstall();
+    return;
+  }
+  // لا يوجد prompt: التطبيق مثبت أو المتصفح لا يدعم — إرشاد يدوي
+  alert('للتثبيت يدوياً من Chrome: اضغط ⋮ ثم "Add to Home screen" أو "Install app".');
 };
 
+async function promptAndroidInstall() {
+  const modal = document.getElementById('pwaModal');
+  if (!window.deferredPrompt) {
+    alert('ميزة التثبيت غير متاحة حالياً أو أن التطبيق مثبت مسبقاً على هاتفك. يمكنك تثبيته يدوياً من إعدادات المتصفح (إضافة إلى الشاشة الرئيسية).');
+    if (modal) modal.style.display = 'none';
+    return;
+  }
+  try {
+    window.deferredPrompt.prompt();
+    const { outcome } = await window.deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      hidePwaInstallButtons();
+    }
+  } catch (err) {
+    console.error('Install prompt failed:', err);
+  } finally {
+    window.deferredPrompt = null;
+    if (modal) modal.style.display = 'none';
+  }
+}
+
+window.promptAndroidInstall = promptAndroidInstall;
+
+window.addEventListener('appinstalled', () => {
+  window.deferredPrompt = null;
+  hidePwaInstallButtons();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
+  // إخفاء زري التثبيت (أندرويد + آيفون) إذا فُتح الموقع كتطبيق standalone
+  if (isStandaloneMode()) {
+    hidePwaInstallButtons();
+    return;
+  }
+
   const installBtn = document.getElementById('pwaInstallBtn');
   const closeBtn = document.getElementById('pwaCloseBtn');
   const modal = document.getElementById('pwaModal');
 
   if (installBtn) {
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-          console.log('User accepted the install prompt');
-        }
-        deferredPrompt = null;
-      } else {
-        alert('ميزة التثبيت غير متاحة حالياً أو أن التطبيق مثبت مسبقاً على هاتفك. يمكنك تثبيته يدوياً من إعدادات المتصفح (إضافة إلى الشاشة الرئيسية).');
-      }
-      if (modal) modal.style.display = 'none';
-    });
+    installBtn.addEventListener('click', promptAndroidInstall);
   }
 
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       if (modal) modal.style.display = 'none';
+    });
+  }
+
+  // إغلاق النافذة عند الضغط خارجها
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
     });
   }
 });
