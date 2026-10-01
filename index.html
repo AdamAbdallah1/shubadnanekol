@@ -122,10 +122,10 @@
         }
         .ios-step-card img {
             width: 100%;
-            max-height: 350px; /* تم تكبير الارتفاع الأقصى لتظهر الصورة بحجم مريح وواضح */
+            max-height: 350px;
             object-fit: contain;
             border-radius: 12px;
-            border: none; /* إزالة الحدود */
+            border: none;
             background: transparent;
         }
         .ios-done-btn {
@@ -208,7 +208,6 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00f2fe">
    <script>
-  // Capture Chrome install prompt EARLY (before module scripts load) so button can trigger it
   window.deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -233,7 +232,6 @@
     if (modal) modal.style.display = 'none';
   }
 
-  // Hide install buttons ASAP if opened from installed standalone app
   if (isStandaloneMode()) {
     document.addEventListener('DOMContentLoaded', hidePwaInstallButtons, { once: true });
   }
@@ -246,7 +244,6 @@
     });
   }
 
-  // دوال فتح وإغلاق نافذة الآيفون لتعمل بشكل سليم
   function openIosGuide() {
       if (isStandaloneMode()) return;
       const modal = document.getElementById('iosGuideModal');
@@ -288,7 +285,6 @@
 
     <!-- PAGE 1: HOME -->
     <div class="view-page active" id="pageHome">
-        <!-- كارت منطقة الضاحية القابل للضغط -->
         <a href="javascript:void(0);" onclick="window.openCategories && window.openCategories()" class="region-card-link" role="button">
             <div class="region-card">
                 <img src="https://lh3.googleusercontent.com/d/1doCOmMqmtbPIMdy4ZnvUx1pIsI3csgjl" alt="Dahyeh Region">
@@ -300,7 +296,6 @@
             </div>
         </a>
 
-        <!-- الأزرار التفاعلية المميزة -->
         <div class="app-features-strip">
             <div class="feature-pill clickable-pill" onclick="window.open('https://wa.me/96170725668', '_blank')">خدمة عملاء</div>
             <div class="feature-pill clickable-pill" onclick="window.openCategories && window.openCategories()">خريطة مباشرة</div>
@@ -313,7 +308,6 @@
          الحياة صار إلها طعمة
         </div>
 
-        <!-- زر تنزيل الويبسايت كبرنامج أسفل عبارة حياتك بتكمل بوجودنا مباشرة -->
         <div class="pwa-download-container" id="androidInstallContainer">
             <button onclick="window.triggerInstallModal && window.triggerInstallModal()" class="pwa-download-btn" id="androidInstallBtn">
                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
@@ -328,7 +322,6 @@
     </button>
 </div>
 
-<!-- Modal الخاص بتثبيت أندرويد -->
 <div id="pwaModal" class="pwa-modal-overlay">
     <div class="pwa-modal-content">
         <h3>تثبيت التطبيق 📲</h3>
@@ -340,13 +333,11 @@
     </div>
 </div>
 
-<!-- Modal الخاص بشرح الآيفون المحدث -->
 <div id="iosGuideModal" class="ios-modal-overlay" style="display: none;">
     <div class="ios-modal-content">
         <button class="ios-close-btn" onclick="closeIosGuide()">&times;</button>
         <h3>طريقة إضافة التطبيق إلى الشاشة الرئيسية</h3>
         
-        <!-- حاوية الخطوات بشكل عمودي مع إمكانية التمرير (Scroll) -->
         <div class="ios-steps-scroll">
             <div class="ios-step-card">
                 <p>1. افتح الموقع من متصفح Safari</p>
@@ -414,7 +405,7 @@
         <div class="gallery-grid" id="profileGalleryContainer"></div>
         <div class="profile-actions-bottom">
             <a id="profileMenuBtn" href="#" target="_blank" class="action-btn btn-menu">MENU</a>
-            <a id="profileContactBtn" href="#" target="_blank" class="action-btn btn-contact">CONTACT</a>
+            <a id="profileContactBtn" href="javascript:void(0);" onclick="window.sendSecureOrderWhatsApp()" class="action-btn btn-contact">CONTACT</a>
             <a id="profileLocationBtn" href="#" target="_blank" class="action-btn btn-location">LOCATION</a>
         </div>
     </div>
@@ -459,7 +450,6 @@
                 <input type="number" id="adminCatOrder" placeholder="1, 2, 3...">
             </div>
 
-            <!-- CATEGORY IMAGE UPLOAD -->
             <div class="admin-form-group">
                 <label>Category Image (Upload File)</label>
                 <input type="file" id="adminCatFile" accept="image/*">
@@ -509,7 +499,6 @@
                 <input type="text" id="adminDesc" placeholder="e.g. Best Burgers in Town">
             </div>
 
-            <!-- RESTAURANT OPEN & CLOSE HOURS -->
             <div style="display: flex; gap: 10px;">
                 <div class="admin-form-group" style="flex: 1;">
                     <label>Opening Time (ساعة الفتح)</label>
@@ -521,7 +510,6 @@
                 </div>
             </div>
 
-            <!-- RESTAURANT COVER IMAGE UPLOAD -->
             <div class="admin-form-group">
                 <label>Restaurant Cover Background Image (صورة خلفية الكارت)</label>
                 <input type="file" id="adminCoverFile" accept="image/*">
@@ -530,7 +518,6 @@
                 <input type="text" id="adminCover" placeholder="أو ضع رابط صورة الخلفية مباشرة" style="margin-top: 8px;">
             </div>
 
-            <!-- RESTAURANT LOGO UPLOAD -->
             <div class="admin-form-group">
                 <label>Restaurant Logo (شعار المطعم الدائري)</label>
                 <input type="file" id="adminLogoFile" accept="image/*">
@@ -539,7 +526,6 @@
                 <input type="text" id="adminLogo" placeholder="أو ضع رابط صورة الشعار مباشرة" style="margin-top: 8px;">
             </div>
 
-            <!-- RESTAURANT GALLERY UPLOAD -->
             <div class="admin-form-group">
                 <label>Gallery Images (معرض الصور)</label>
                 <input type="file" id="adminGalleryFiles" accept="image/*" multiple>
