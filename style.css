@@ -312,16 +312,6 @@ p {
   color: var(--text-3);
 }
 
-.eyebrow {
-  display: block;
-  font-size: var(--t-2xs);
-  font-weight: 600;
-  color: var(--text-3);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: var(--sp-2);
-}
-
 /* --------------------------------------------------------------------------
    5. BUTTONS
    -------------------------------------------------------------------------- */
@@ -434,10 +424,6 @@ p {
   pointer-events: none;
 }
 
-.btn.is-loading {
-  pointer-events: none;
-}
-
 .btn .spinner {
   width: 16px;
   height: 16px;
@@ -466,14 +452,6 @@ p {
 .chip-accent {
   background: var(--accent);
   color: var(--text-invert);
-}
-
-.chip-quiet {
-  background: rgba(10, 13, 12, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
 }
 
 .status {
@@ -563,23 +541,6 @@ select.field-control {
 textarea.field-control {
   min-height: 96px;
   resize: vertical;
-}
-
-.field-help {
-  font-size: var(--t-2xs);
-  color: var(--text-3);
-  margin-top: 6px;
-  line-height: 1.55;
-}
-
-.field-error {
-  font-size: var(--t-xs);
-  color: #f0897f;
-  background: var(--danger-dim);
-  border: 1px solid rgba(229, 84, 77, 0.3);
-  border-radius: var(--r-sm);
-  padding: 10px 12px;
-  margin-bottom: var(--sp-4);
 }
 
 .field-row {
@@ -694,13 +655,6 @@ textarea.field-control {
   letter-spacing: -0.01em;
 }
 
-.panel-note {
-  font-size: var(--t-2xs);
-  color: var(--text-3);
-  margin-top: -6px;
-  margin-bottom: var(--sp-4);
-}
-
 .panel-subtitle {
   font-size: var(--t-sm);
   font-weight: 600;
@@ -728,11 +682,6 @@ textarea.field-control {
   background-size: 300% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
   border-radius: var(--r-sm);
-}
-
-.skel-line {
-  height: 12px;
-  margin-bottom: 8px;
 }
 
 .skel-cat {
@@ -781,10 +730,6 @@ textarea.field-control {
   color: var(--text-2);
   max-width: 34ch;
   margin-inline: auto;
-}
-
-.empty-action {
-  margin-top: var(--sp-4);
 }
 
 /* --------------------------------------------------------------------------
