@@ -267,6 +267,22 @@ document.addEventListener(
   true
 );
 
+/**
+ * Clicking a <div> is invisible to keyboards and screen readers. This gives
+ * the card list items the same semantics as a link without changing markup.
+ */
+function makeCardInteractive(el, handler) {
+  if (!el) return;
+  el.setAttribute("role", "button");
+  el.tabIndex = 0;
+  el.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+      event.preventDefault();
+      handler(event);
+    }
+  });
+}
+
 // ============================================================
 // PAGE NAVIGATION (WITH PERFECT REFRESH HANDLER & PARENT PAGE FIX)
 // ============================================================
@@ -1745,6 +1761,8 @@ function filterCategories() {
         data.imgUrl
       );
 
+    makeCardInteractive(card, card.onclick);
+
 
     card.innerHTML = `
 
@@ -1981,6 +1999,8 @@ function renderRestaurantsList(
     card.onclick = () =>
       openRestaurantProfile(r);
 
+    makeCardInteractive(card, card.onclick);
+
     const formattedOpenTime = format12HourTime(r.openTime || "11:00");
     const formattedCloseTime = format12HourTime(r.closeTime || "");
 
@@ -2069,8 +2089,10 @@ function fillRestaurantProfileDOM(r) {
   if (profileName)
     profileName.innerText = r.name || "";
 
-  if (profileDesc)
+  if (profileDesc) {
     profileDesc.innerText = r.desc || "";
+    profileDesc.hidden = !String(r.desc || "").trim();
+  }
 
   /* --- Open / closed status chip --- */
   const statusEl = document.getElementById("profileStatus");
@@ -3299,6 +3321,26 @@ function initDesignSystem() {
   /* --- Loading skeletons until the first Firestore snapshot --- */
   if (!categoriesLoaded) renderCategorySkeleton();
   if (!restaurantsLoaded && currentCategoryFilter) renderRestaurantSkeleton();
+
+  /* --- If Firestore never answers (offline), swap skeletons for a real
+         error state instead of an endless shimmer --- */
+  setTimeout(function () {
+    const grid = document.getElementById("categoriesGridContainer");
+    if (!categoriesLoaded && grid && !grid.querySelector(".category-card")) {
+      grid.innerHTML = emptyStateHtml(
+        "تعذّر تحميل الأقسام",
+        "تحقّق من اتصالك بالإنترنت ثم أعد تحميل الصفحة."
+      );
+    }
+
+    const list = document.getElementById("restaurantsListContainer");
+    if (!restaurantsLoaded && list && !list.querySelector(".restaurant-card")) {
+      list.innerHTML = emptyStateHtml(
+        "تعذّر تحميل المطاعم",
+        "تحقّق من اتصالك بالإنترنت ثم أعد تحميل الصفحة."
+      );
+    }
+  }, 9000);
 }
 
 window.addEventListener("DOMContentLoaded", initDesignSystem);

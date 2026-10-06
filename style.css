@@ -267,7 +267,8 @@ p {
 .appfoot {
   border-top: 1px solid var(--line);
   padding-block: var(--sp-5);
-  padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom, 0px));
+  /* clears the floating WhatsApp button on small screens */
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   margin-top: auto;
 }
 
@@ -590,6 +591,13 @@ textarea.field-control {
 .field-row .field-control {
   min-width: 0;
   padding-inline: 10px;
+}
+
+/* two time pickers side by side are too cramped below ~375px */
+@media (max-width: 374px) {
+  .field-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* --- Search ------------------------------------------------------------- */
@@ -1097,15 +1105,22 @@ textarea.field-control {
   padding: 11px 12px 12px;
 }
 
+/* when an English name follows, tighten the gap — the label owns it instead */
+.cat-body:has(+ .cat-en) {
+  padding-bottom: 6px;
+}
+
 .cat-name {
   flex: 1;
   min-width: 0;
   font-size: var(--t-body);
   font-weight: 600;
   line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .cat-arrow {
@@ -1117,7 +1132,8 @@ textarea.field-control {
 
 .cat-en {
   padding: 0 12px 12px;
-  margin-top: -6px;
+  /* pins the English label to the card bottom so a row of cards aligns */
+  margin-top: auto;
   font-size: var(--t-2xs);
   color: var(--text-3);
   letter-spacing: 0.04em;
@@ -1178,7 +1194,8 @@ textarea.field-control {
 
 .restaurant-card {
   position: relative;
-  display: block;
+  display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -1198,6 +1215,7 @@ textarea.field-control {
 
 .rc-media {
   position: relative;
+  flex: 0 0 auto;
   aspect-ratio: 16 / 9;
   background: var(--surface-2);
   overflow: hidden;
@@ -1213,7 +1231,7 @@ textarea.field-control {
 .rc-media.is-brand {
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--surface-2), var(--surface-3));
+  background: var(--surface-2);
 }
 
 .rc-brand {
@@ -1255,6 +1273,9 @@ textarea.field-control {
 }
 
 .rc-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: var(--sp-4);
 }
 
@@ -1280,6 +1301,7 @@ textarea.field-control {
   font-size: var(--t-sm);
   color: var(--text-2);
   line-height: 1.6;
+  margin-bottom: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1290,7 +1312,8 @@ textarea.field-control {
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 10px;
+  /* pins the meta row to the bottom so cards in a row line up */
+  margin-top: auto;
   padding-top: 10px;
   border-top: 1px solid var(--line);
   font-size: var(--t-2xs);
@@ -1361,7 +1384,7 @@ textarea.field-control {
 .profile-desc {
   font-size: var(--t-sm);
   color: var(--text-2);
-  margin-top: 4px;
+  margin-top: var(--sp-2);
   line-height: 1.65;
   overflow-wrap: anywhere;
 }
@@ -1498,6 +1521,9 @@ textarea.field-control {
 
 .admin-actions .btn {
   flex: 1;
+  min-width: 0;
+  padding-inline: var(--sp-3);
+  font-size: var(--t-sm);
 }
 
 .admin-list {
@@ -1615,8 +1641,7 @@ input[type="file"]::file-selector-button:hover {
 /* --------------------------------------------------------------------------
    16. FAB
    -------------------------------------------------------------------------- */
-.floating-whatsapp,
-.fab {
+.floating-whatsapp {
   position: fixed;
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   right: 16px;
@@ -1633,13 +1658,11 @@ input[type="file"]::file-selector-button:hover {
   transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
 }
 
-.floating-whatsapp:active,
-.fab:active {
+.floating-whatsapp:active {
   transform: scale(0.94);
 }
 
-.floating-whatsapp svg,
-.fab svg {
+.floating-whatsapp svg {
   width: 27px;
   height: 27px;
   fill: currentColor;
@@ -2080,6 +2103,10 @@ body.no-scroll {
     max-width: 768px;
   }
 
+  .appfoot {
+    padding-bottom: calc(var(--sp-6) + env(safe-area-inset-bottom, 0px));
+  }
+
   .main {
     padding-block: var(--sp-6) var(--sp-9);
   }
@@ -2292,8 +2319,7 @@ body.no-scroll {
     bottom: 24px;
   }
 
-  .floating-whatsapp,
-  .fab {
+  .floating-whatsapp {
     bottom: 24px;
     right: 24px;
   }
