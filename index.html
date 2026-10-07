@@ -270,23 +270,26 @@
 
     <!-- ---------------- PAGE 4: RESTAURANT PROFILE ---------------- -->
     <div class="view-page" id="pageRestProfile">
+        <!-- Cover stands on its own: the photo, plus the save control tucked
+             into its corner. Identity sits below it, never on top of it. -->
         <div class="profile-cover" id="profileCover">
             <img id="profileCoverImg" alt="">
-            <div class="profile-cover-id">
-                <div class="profile-logo">
-                    <img id="profileLogo" alt="">
-                </div>
-                <h1 class="profile-title" id="profileName">اسم المطعم</h1>
+            <!-- Save + rating share one frosted chip in the photo's corner. -->
+            <div class="cover-actions">
+                <button class="fav-btn fav-btn--cover" id="profileFavBtn" type="button" aria-pressed="false" aria-label="أضف المطعم إلى المفضلة">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.7 10.6 19.4C5.4 14.7 2 11.6 2 7.9 2 5.1 4.2 3 7 3c1.6 0 3.1.7 4.1 1.9L12 5.4l.9-.5C13.9 3.7 15.4 3 17 3c2.8 0 5 2.1 5 4.9 0 3.7-3.4 6.8-8.6 11.5L12 20.7Z"/></svg>
+                </button>
+                <span class="profile-rating" id="profileRating" hidden></span>
             </div>
         </div>
 
         <div class="profile-head">
+            <div class="profile-logo">
+                <img id="profileLogo" alt="">
+            </div>
+            <h1 class="profile-title" id="profileName">اسم المطعم</h1>
             <div class="profile-badges">
                 <span class="status is-open" id="profileStatus" hidden><i></i><span class="status-text"></span></span>
-                <span class="profile-rating" id="profileRating" hidden></span>
-                <button class="fav-btn" id="profileFavBtn" type="button" aria-pressed="false" aria-label="أضف المطعم إلى المفضلة">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.7 10.6 19.4C5.4 14.7 2 11.6 2 7.9 2 5.1 4.2 3 7 3c1.6 0 3.1.7 4.1 1.9L12 5.4l.9-.5C13.9 3.7 15.4 3 17 3c2.8 0 5 2.1 5 4.9 0 3.7-3.4 6.8-8.6 11.5L12 20.7Z"/></svg>
-                </button>
             </div>
             <p class="profile-desc" id="profileDesc">وصف المطعم</p>
         </div>

@@ -544,6 +544,10 @@ html.vt-running .view-page.active {
   flex: 0 0 auto;
   line-height: 1;
   white-space: nowrap;
+  /* Always reads ★5 — mark first, value second — whatever the page
+     direction is. isolate keeps it from bleeding into surrounding RTL. */
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .rating-star {
@@ -1714,58 +1718,59 @@ body.is-home .appbar-title {
   object-fit: cover;
 }
 
-/* Legibility scrim — keeps the logo + name readable on any cover photo. */
-.profile-cover::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(5, 16, 14, 0.76) 0%,
-    rgba(5, 16, 14, 0.4) 50%,
-    rgba(5, 16, 14, 0.58) 100%
-  );
-  pointer-events: none;
-}
-
-.profile-cover.is-empty img,
-.profile-cover.is-empty::after {
+/* No cover photo → the image drops out and the flat panel holds the frame. */
+.profile-cover.is-empty img {
   display: none;
 }
 
-.profile-cover-id {
-  position: relative;
-  z-index: 1;
+/* The photo stays the hero, so save + rating share one frosted chip in the
+   corner instead of making the picture carry a scrim. Tucked opposite the
+   back arrow so the two controls never compete. */
+.cover-actions {
+  position: absolute;
+  inset-block-start: 12px;
+  /* Physical `left`, not a logical inset: the chip carries direction:ltr for
+     its own contents, which would otherwise flip this to the right edge and
+     stack it under the back arrow. */
+  left: 12px;
+  z-index: 2;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-4);
-  max-width: 100%;
-  text-align: center;
+  gap: 2px;
+  padding: 3px;
+  /* Heart first, then ★5 — reads the same in every language. */
+  direction: ltr;
+  border-radius: 999px;
+  background: rgba(6, 16, 14, 0.46);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
 }
 
-/* On a photo the identity reads white; on the flat panel it keeps page ink. */
-/* Small disc on the cover — the name carries the identity, not the badge. */
-.profile-cover-id .profile-logo {
-  width: 56px;
-  height: 56px;
+.fav-btn--cover {
+  width: 34px;
+  height: 34px;
 }
 
-.profile-cover-id .profile-title {
-  color: #fff;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+.fav-btn--cover:hover {
+  background: rgba(255, 255, 255, 0.14);
 }
 
-.profile-cover.is-empty .profile-cover-id .profile-title {
-  color: var(--text);
-  text-shadow: none;
+/* Rating sits on the photo, so it reads in white, not page ink. */
+.cover-actions .profile-rating {
+  display: inline-flex;
+  align-items: center;
+  padding-inline: 3px 9px;
 }
 
-.profile-cover:not(.is-empty) .profile-logo {
-  background: rgba(5, 16, 14, 0.55);
-  border-color: rgba(255, 255, 255, 0.55);
-  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
+.cover-actions .rating-star {
+  font-size: 14px;
+}
+
+.cover-actions .rating-value {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .profile-head {
@@ -1778,14 +1783,16 @@ body.is-home .appbar-title {
   margin-bottom: var(--sp-5);
 }
 
+/* Small disc, sitting below the cover — never on top of the photo. */
 .profile-logo {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   flex: 0 0 auto;
   border-radius: 50%;
   overflow: hidden;
   background: var(--surface-2);
   border: 1px solid var(--line-strong);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
 }
 
 /* Logos often ship with white padding around the artwork — the zoom
@@ -3465,8 +3472,8 @@ body.is-entering #pageHome .install {
   }
 
   .profile-logo {
-    width: 88px;
-    height: 88px;
+    width: 72px;
+    height: 72px;
   }
 
   .profile-cover {
