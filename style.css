@@ -1702,7 +1702,7 @@ body.is-home .appbar-title {
 .profile-head {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--sp-3);
   padding-bottom: var(--sp-5);
   border-bottom: 1px solid var(--line);
@@ -1733,6 +1733,7 @@ body.is-home .appbar-title {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.2;
+  text-align: center;
   overflow-wrap: anywhere;
 }
 
@@ -1741,18 +1742,21 @@ body.is-home .appbar-title {
   color: var(--text-2);
   margin-top: var(--sp-2);
   line-height: 1.65;
+  text-align: center;
   overflow-wrap: anywhere;
 }
 
 .profile-identity {
   min-width: 0;
+  width: 100%;
 }
 
 .profile-badges {
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--sp-2);
   margin-bottom: 8px;
 }
 
@@ -2545,6 +2549,11 @@ body.no-scroll {
   from {
     opacity: 0;
     transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
@@ -3376,7 +3385,6 @@ body.is-entering #pageHome .install {
   }
 
   .profile-head {
-    flex-direction: row;
     align-items: center;
   }
 
