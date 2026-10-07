@@ -2986,6 +2986,64 @@ function renderHomeCategories() {
   sweepImages(rail);
 }
 
+/* Home shows what the user actually saved. Called whenever the restaurant
+   data lands and whenever a heart is toggled, so the rail never lies. */
+function renderHomeSaved() {
+  const section = document.getElementById("homeCats");
+  const rail = document.getElementById("homeSavedRail");
+  const empty = document.getElementById("homeSavedEmpty");
+  if (!section || !rail) return;
+
+  const ids = readFavorites();
+  const items = ids
+    .map(id => allRestaurants.find(r => r && r.id === id))
+    .filter(Boolean);
+
+  section.hidden = false;
+
+  if (empty) empty.hidden = items.length > 0;
+
+  if (!items.length) {
+    rail.innerHTML = "";
+    rail.dataset.sig = "";
+    return;
+  }
+
+  const signature = items
+    .map(r => r.id + "|" + (r.cover || r.logo || ""))
+    .join("~");
+  if (rail.children.length && rail.dataset.sig === signature) return;
+  rail.dataset.sig = signature;
+
+  rail.innerHTML = items
+    .map((r, index) => {
+      const photo = r.cover || r.logo
+        ? `<img class="fade-img" src="${escapeHtml(
+            r.cover || r.logo
+          )}" alt="${escapeHtml(r.name || "")}" loading="lazy" decoding="async">`
+        : "";
+
+      return (
+        `<button class="homecat" type="button" ` +
+        `data-rest="${escapeHtml(r.id)}" style="--i:${index}">` +
+        `<span class="homecat-media">${photo}</span>` +
+        `<span class="homecat-copy">` +
+        `<span class="homecat-name">${escapeHtml(r.name || "")}</span>` +
+        `</span></button>`
+      );
+    })
+    .join("");
+
+  rail.querySelectorAll(".homecat").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const data = allRestaurants.find(r => r && r.id === btn.dataset.rest);
+      if (data) openRestaurantProfile(data, btn);
+    });
+  });
+
+  sweepImages(rail);
+}
+
 // ============================================================
 // OPEN RESTAURANTS BY CATEGORY (WITH SAVED FILTER STATE)
 // ============================================================
@@ -3120,6 +3178,7 @@ function toggleFavorite(id) {
   }
 
   syncFavoriteUI(id);
+  renderHomeSaved();
   return nowFavorite;
 }
 
@@ -3209,15 +3268,12 @@ function ratingHtml(value, extraClass = "") {
   const n = normalizeRating(value);
   if (n === null) return ""; // no rating configured → show nothing
 
-  const percent = (n / 5) * 100;
   const label = ratingText(n);
 
+  /* Compact single-star form: ★4.5 — one mark, one number, no star row. */
   return `
     <span class="rating ${extraClass}" role="img" aria-label="التقييم ${label} من 5">
-      <span class="rating-stars" aria-hidden="true">
-        <span class="rating-stars-track">★★★★★</span>
-        <span class="rating-stars-fill" style="--fill:${percent}%">★★★★★</span>
-      </span>
+      <span class="rating-star" aria-hidden="true">★</span>
       <span class="rating-value">${label}</span>
     </span>`;
 }
@@ -3497,17 +3553,19 @@ function fillRestaurantProfileDOM(r) {
   const contactBtn = document.getElementById("profileContactBtn");
   const locationBtn = document.getElementById("profileLocationBtn");
 
-  /* --- Cover banner (new presentation element) --- */
+  /* --- Cover banner (identity sits on top of it) --- */
   const coverWrap = document.getElementById("profileCover");
   const coverImg = document.getElementById("profileCoverImg");
   if (coverWrap && coverImg) {
     if (r.cover) {
       setImgSrc(coverImg, r.cover);
       coverImg.alt = (r.name || "") + " — صورة الغلاف";
-      coverWrap.hidden = false;
+      coverWrap.classList.remove("is-empty");
     } else {
+      /* No cover photo: the panel stays so the logo + name keep their place,
+         it just drops back to the flat surface. */
       setImgSrc(coverImg, "");
-      coverWrap.hidden = true;
+      coverWrap.classList.add("is-empty");
     }
   }
 
@@ -4019,6 +4077,8 @@ function listenToRestaurants() {
             renderRestaurantsList(activeQuery, !activeQuery);
           }
         }
+
+        renderHomeSaved();
 
       },
       error => handleSnapshotError("restaurants", error)

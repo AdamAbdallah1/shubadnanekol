@@ -546,6 +546,16 @@ html.vt-running .view-page.active {
   white-space: nowrap;
 }
 
+.rating-star {
+  color: #f0b429;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.rating--sm .rating-star {
+  font-size: 12px;
+}
+
 .rating-stars {
   position: relative;
   display: inline-block;
@@ -1691,12 +1701,71 @@ body.is-home .appbar-title {
   background: var(--surface-2);
   border: 1px solid var(--line);
   margin-bottom: var(--sp-5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-cover img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Legibility scrim — keeps the logo + name readable on any cover photo. */
+.profile-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(5, 16, 14, 0.76) 0%,
+    rgba(5, 16, 14, 0.4) 50%,
+    rgba(5, 16, 14, 0.58) 100%
+  );
+  pointer-events: none;
+}
+
+.profile-cover.is-empty img,
+.profile-cover.is-empty::after {
+  display: none;
+}
+
+.profile-cover-id {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  max-width: 100%;
+  text-align: center;
+}
+
+/* On a photo the identity reads white; on the flat panel it keeps page ink. */
+/* Small disc on the cover — the name carries the identity, not the badge. */
+.profile-cover-id .profile-logo {
+  width: 56px;
+  height: 56px;
+}
+
+.profile-cover-id .profile-title {
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55);
+}
+
+.profile-cover.is-empty .profile-cover-id .profile-title {
+  color: var(--text);
+  text-shadow: none;
+}
+
+.profile-cover:not(.is-empty) .profile-logo {
+  background: rgba(5, 16, 14, 0.55);
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.45);
 }
 
 .profile-head {
@@ -2850,6 +2919,13 @@ body.is-entering #pageHome .install {
 
 /* sits on the far end of the row so the fixed WhatsApp button never lands
    on top of it */
+.home-saved-empty {
+  margin-top: var(--sp-3);
+  font-size: var(--t-xs);
+  line-height: 1.75;
+  color: var(--text-3);
+}
+
 .home-cats-more {
   display: flex;
   width: fit-content;
